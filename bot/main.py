@@ -12,17 +12,15 @@ from psycopg2 import Error
 load_dotenv()
 
 # Подключаем логирование
-logging.basicConfig(
-    filename='logfile.txt', format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO
-)
+logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 
 logger = logging.getLogger(__name__)
 
 host = os.getenv('HOST')
 TOKEN = os.getenv('TOKEN')
 username = os.getenv('USER')
-user_password = os.getenv('USER_PASSWORD')
-root_password = os.getnev('ROOT_PASSWORD')
+user_password = os.getenv('PASSWORD')
+postgres_port = os.getenv('POSTGRES_PORT')
 postgres_host = os.getenv('POSTGRES_HOST')
 postgres_username = os.getenv('POSTGRES_USER')
 postgres_password = os.getenv('POSTGRES_PASSWORD')
@@ -31,6 +29,7 @@ repl_password = os.getenv('REPL_PASSWORD')
 port = os.getenv('PORT')
 postgres_db = os.getenv('POSTGRES_DB')
 db_version = os.getenv('POSTGRES_VERSION')
+
 def start(update: Update, context):
     user = update.effective_user
     update.message.reply_text(f'Привет {user.full_name}!')
@@ -164,7 +163,7 @@ def echo(update: Update, context):
 def getConnectionCommand(command):
     client = paramiko.SSHClient()
     client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-    client.connect(hostname=host, username="root", password=root_password)
+    client.connect(hostname=host, username=username, password=user_password)
     stdin, stdout, stderr = client.exec_command(command)
     data = stdout.read() + stderr.read()
     client.close()
@@ -235,7 +234,7 @@ def getTableData(sql = "SELECT * FROM emails"):
         connection = psycopg2.connect(user=postgres_username,
                                       password=postgres_password,
                                       host=postgres_host,
-                                      port="5432",
+                                      port=postgres_port,
                                       database=postgres_db)
 
         cursor = connection.cursor()
