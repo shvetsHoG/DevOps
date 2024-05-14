@@ -19,8 +19,7 @@ logger = logging.getLogger(__name__)
 host = os.getenv('HOST')
 TOKEN = os.getenv('TOKEN')
 username = os.getenv('USER')
-user_password = os.getenv('USER_PASSWORD')
-root_password = os.getenv('ROOT_PASSWORD')
+user_password = os.getenv('PASSWORD')
 postgres_host = os.getenv('POSTGRES_HOST')
 postgres_username = os.getenv('POSTGRES_USER')
 postgres_password = os.getenv('POSTGRES_PASSWORD')
@@ -161,7 +160,7 @@ def echo(update: Update, context):
 def getConnectionCommand(command):
     client = paramiko.SSHClient()
     client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-    client.connect(hostname=host, username="root", password=root_password)
+    client.connect(hostname=host, username=username, password=user_password)
     stdin, stdout, stderr = client.exec_command(command)
     data = stdout.read() + stderr.read()
     client.close()
@@ -232,7 +231,7 @@ def getTableData(sql = "SELECT * FROM emails"):
         connection = psycopg2.connect(user=postgres_username,
                                       password=postgres_password,
                                       host=postgres_host,
-                                      port="5432",
+                                      port=postgres_port,
                                       database=postgres_db)
 
         cursor = connection.cursor()
