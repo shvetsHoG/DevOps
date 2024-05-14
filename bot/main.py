@@ -225,7 +225,7 @@ def getServices(update: Update, context):
     update.message.reply_text(data)
 
 def getReplLogs(update: Update, context):
-    data = getConnectionCommand(f'cat /var/log/postgresql/postgresql-${db_version}-main.log | tail -n 20')
+    data = getConnectionCommand(f'cat /var/log/postgresql/postgresql-{db_version}-main.log | tail -n 20')
     update.message.reply_text(data[-4000:])
 
 def getTableData(sql = "SELECT * FROM emails"):
