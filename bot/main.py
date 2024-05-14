@@ -30,6 +30,7 @@ repl_host = os.getenv('REPL_HOST')
 repl_password = os.getenv('REPL_PASSWORD')
 port = os.getenv('PORT')
 postgres_db = os.getenv('POSTGRES_DB')
+db_version = os.getenv('POSTGRES_VERSION')
 def start(update: Update, context):
     user = update.effective_user
     update.message.reply_text(f'Привет {user.full_name}!')
@@ -225,7 +226,7 @@ def getServices(update: Update, context):
     update.message.reply_text(data)
 
 def getReplLogs(update: Update, context):
-    data = getConnectionCommand('docker logs db')
+    data = getConnectionCommand(f'cat /var/log/postgresql/postgresql-${db_version}-main.log | tail -n 20')
     update.message.reply_text(data[-4000:])
 
 def getTableData(sql = "SELECT * FROM emails"):
