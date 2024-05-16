@@ -223,7 +223,7 @@ def getServices(update: Update, context):
     update.message.reply_text(data)
 
 def getReplLogs(update: Update, context):
-    data = getConnectionCommand('docker logs db')
+    data = getConnectionCommand('docker logs db | grep replication')
     update.message.reply_text(data[-4000:])
 
 def getTableData(sql = "SELECT * FROM emails"):
